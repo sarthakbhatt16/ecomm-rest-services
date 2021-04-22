@@ -58,13 +58,27 @@ router.get("/products", (req, res, next) => {
 router
   .route("/categories")
   .get((req, res, next) => {
-    Category.find({}, (err, categories) => {
-      res.json({
-        success: true,
-        message: "Success",
-        categories: categories,
+    if(req.query.hasOwnProperty('getForHome')){
+      console.log("in if");
+      reqCategoryList = ['edibles', 'flowers','carts']
+      Category.find({name: {$in: reqCategoryList}}, (err, categories) => {
+        res.json({
+          success: true,
+          message: "Success",
+          categories: categories,
+        });
       });
-    });
+    }
+    else{
+      Category.find({}, (err, categories) => {
+        res.json({
+          success: true,
+          message: "Success",
+          categories: categories,
+        });
+      });
+    }
+    
   })
   .post((req, res, next) => {
     let category = new Category();

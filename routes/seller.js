@@ -13,8 +13,16 @@ const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 const s3 = new aws.S3({
-  accessKeyId: AWS_ACCESS_KEY,
-  secretAccessKey: AWS_SECRET_KEY,
+  accessKeyId:  'AKIAIXE7AL7BNOT35PEA',
+  secretAccessKey: '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',
+});
+
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "dybbf83m6",
+  api_key: "274824935352766",
+  api_secret: "H1Vsmrbw7qw6aoRQOPp51z4lbvc",
 });
 
 const faker = require("faker");
@@ -22,20 +30,29 @@ const faker = require("faker");
 const checkJWT = require("../middlewares/check-jwt");
 
 //function to upload resources to AWS using multer service
+// var upload = multer({
+//   storage: multerS3({
+//     s3: s3,
+//     bucket: "testhealbucket",
+//     metadata: function (req, file, cb) {
+//       cb(null, {
+//         fieldName: file.fieldname
+//       });
+//     },
+//     key: function (req, file, cb) {
+//       cb(null, Date.now().toString());
+//     },
+//   }),
+// });
+
 var upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: "wpl-final-project",
-    metadata: function (req, file, cb) {
-      cb(null, {
-        fieldName: file.fieldname
-      });
-    },
-    key: function (req, file, cb) {
-      cb(null, Date.now().toString());
-    },
-  }),
-});
+    storage: multer.diskStorage({}),
+    filename: function(req,file,cb){
+      cb(null,file.fieldname+ '-' + Date.now())
+    }
+  });
+
+
 
 router.route("/products/:id").post((req, res) => {
   Product.findByIdAndUpdate({
@@ -69,9 +86,12 @@ router
         }
       });
   })
-  .post([checkJWT, upload.single("product_picture")], (req, res, next) => {
+  .post([checkJWT, upload.single("product_picture")], async (req, res, next) => {
+
     console.log(upload);
     console.log(req.file);
+    const result = await cloudinary.uploader.upload(req.file.path);
+
     let product = new Product();
     product.owner = req.decoded.user._id;
     product.category = req.body.categoryId;
@@ -79,7 +99,7 @@ router
     product.price = req.body.price;
     product.quantity = req.body.quantity;
     product.description = req.body.description;
-    product.image = req.file.location;
+    product.image = result.secure_url;
     product.isDeleted = false;
     product.save();
     res.json({
