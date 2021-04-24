@@ -31,12 +31,14 @@ const userRoutes = require("./routes/account");
 const mainRoutes = require("./routes/main");
 const sellerRoutes = require("./routes/seller");
 const productSearchRoutes = require("./routes/product-search");
+const index = require("./index")
 
 //express application using Routes from this application
 app.use("/api", mainRoutes);
 app.use("/api/accounts", userRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/search", productSearchRoutes);
+app.use("/", index)
 
 //Setting up the port for server to run on
 app.listen(process.env.PORT || config.port, (err) => {
