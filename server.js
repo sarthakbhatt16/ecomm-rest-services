@@ -40,5 +40,5 @@ app.use("/api/search", productSearchRoutes);
 
 //Setting up the port for server to run on
 app.listen(process.env.PORT || config.port, (err) => {
-  console.log("Server Init: <port> " + config.port);
+  console.log("Server has started on Init: <port> " + config.port);
 });
