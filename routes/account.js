@@ -15,6 +15,7 @@ router.post("/signup", (req, res, next) => {
   user.email = req.body.email;
   user.password = req.body.password;
   user.picture = user.gravatar();
+  user.contactNumber = req.body.contact
   user.isSeller = req.body.isSeller;
 
   User.findOne({

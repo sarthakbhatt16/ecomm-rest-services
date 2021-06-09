@@ -20,9 +20,9 @@ const s3 = new aws.S3({
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
-  cloud_name: "dybbf83m6",
-  api_key: "274824935352766",
-  api_secret: "H1Vsmrbw7qw6aoRQOPp51z4lbvc",
+  cloud_name: "dfs9x3rbb",
+  api_key: "219441365893285",
+  api_secret: "99yLPAtRGqUba-TWKe5_hZql8AA",
 });
 
 const faker = require("faker");

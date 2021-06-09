@@ -14,6 +14,7 @@ const UserSchema = new Schema({
     lowercase: true
   },
   name: String,
+  contactNumber : String,
   password: String,
   picture: String,
   isSeller: {

@@ -12,6 +12,11 @@ const Order = require("../models/order");
 
 const checkJWT = require("../middlewares/check-jwt");
 
+
+const accountSid = 'AC32f59af2026a2003dfb6ff1d637d1eb8'; 
+const authToken = '2e06e925c6f7946dbdba00f63de2a2ce'; 
+const client = require('twilio')(accountSid, authToken); 
+
 //Function to facilitate obtaining the product information
 router.get("/products", (req, res, next) => {
   const perPage = 10;
@@ -92,7 +97,7 @@ router
 
 //Function to facilitate get request of specific categories
 router.get("/categories/:id", (req, res, next) => {
-  const perPage = 10;
+  const perPage = 60;
   const page = req.query.page;
   async.parallel(
     [
@@ -218,7 +223,7 @@ router.post("/review", checkJWT, (req, res, next) => {
 router.post("/payment", checkJWT, (req, res, next) => {
   const currentCharges = Math.round(req.body.total);
 
-  const products = req.body.products;
+  const products = req.body.productsArray;
   console.log("PAYMENTGW: products", products);
 
   let order = new Order();
@@ -234,7 +239,24 @@ router.post("/payment", checkJWT, (req, res, next) => {
     i++;
   });
 
-  order.save();
+  order.save(function(err, doc, numAffect){
+    console.log("save callback", err, doc, numAffect);
+    if(doc && doc!= undefined && doc!= null){
+
+        // client.messages 
+        // .create({ 
+        //   body: 'We have received the request for closing this whatsapp channel. You will not receive any messages on this whatsapp channel.', 
+        //   from: 'whatsapp:+14155238886',       
+        //   to: 'whatsapp:+12409884771' 
+        // }) 
+        // .then(message => console.log(message)) 
+        // .done();
+
+    }
+    else{
+
+    }
+  })
 
   res.json({
     success: true,
